@@ -1,9 +1,10 @@
 from flask import Flask, render_template, jsonify,  request
-import pickle as pkl
+import pickle 
 import numpy as np
 
 # read the pickle
-sp_pred_model = pkl.load(open('selling_price_pred.pkl', 'rb'))
+model = pickle.load(open('sp.pkl', 'rb'))
+
 
 #initialize the flask app
 app = Flask(__name__)
@@ -25,7 +26,7 @@ def predict():
         transmission = int(request.form['transmission'])
     
     # Make prediction
-    prediction = sp_pred_model.predict([[current_price, kms, fuel_type, seller_type, transmission, owner, car_age]])
+    prediction = model.predict([[current_price, kms, fuel_type, seller_type, transmission, owner, car_age]])
     
     # Display prediction on index.html
     return render_template('index.html', prediction_text='Predicted Selling Price: {:.2f} lakhs'.format(prediction[0]))
